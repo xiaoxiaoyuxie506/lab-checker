@@ -22,6 +22,9 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
+# 确保上传目录存在
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 # 允许的文件扩展名
 ALLOWED_EXTENSIONS = {'docx'}
 
@@ -186,19 +189,28 @@ def check_gender_completeness(records):
     """
     errors = []
     
+    # 不需要检查性别的项目（元数据字段）
+    skip_items = ['中心号', '生效日期', '日期', '备注', '说明', '编号', '序号']
+    
     # 按项目分组
     items = {}
     for record in records:
         item_name = record['item'].strip()
         if not item_name:
             continue
+        
+        # 跳过非检查项目
+        if any(skip in item_name for skip in skip_items):
+            continue
+        
         if item_name not in items:
             items[item_name] = {'male': False, 'female': False, 'rows': []}
         
         gender = record['gender'].strip().lower()
-        if gender in ['男', 'male', 'm']:
+        # 性别为空视为男女都适用
+        if gender in ['男', 'male', 'm'] or not gender:
             items[item_name]['male'] = True
-        elif gender in ['女', 'female', 'f']:
+        if gender in ['女', 'female', 'f'] or not gender:
             items[item_name]['female'] = True
         
         items[item_name]['rows'].append(record['row_index'])
@@ -221,6 +233,45 @@ def check_gender_completeness(records):
                 'message': f'项目"{item_name}"缺少女性数据',
                 'rows': data['rows']
             })
+    
+    return errors
+
+
+def check_effective_date(table_data):
+    """
+    检查生效日期是否为未来日期
+    返回错误列表
+    """
+    errors = []
+    
+    if not table_data or len(table_data) < 1:
+        return errors
+    
+    # 查找生效日期（通常在表头或第一行）
+    for row in table_data[:3]:  # 检查前3行
+        for cell in row:
+            cell_str = str(cell).strip()
+            # 查找日期格式：2026年4月5日 或 2026-04-05 等
+            date_match = re.search(r'(\d{4})[年/-](\d{1,2})[月/-]?(\d{1,2})?', cell_str)
+            if date_match:
+                try:
+                    year = int(date_match.group(1))
+                    month = int(date_match.group(2))
+                    day = int(date_match.group(3)) if date_match.group(3) else 1
+                    
+                    effective_date = datetime(year, month, day)
+                    today = datetime.now()
+                    
+                    if effective_date > today:
+                        errors.append({
+                            'type': 'future_date',
+                            'severity': 'warning',
+                            'item': '生效日期',
+                            'message': f'生效日期({year}年{month}月{day}日)是未来日期',
+                            'row': 1
+                        })
+                except (ValueError, TypeError):
+                    pass
     
     return errors
 
@@ -345,6 +396,9 @@ def analyze_document(file_path):
     
     # 分析每个表格
     for table_index, table_data in enumerate(tables):
+        # 检查生效日期
+        all_errors.extend(check_effective_date(table_data))
+        
         records = parse_table_data(table_data)
         if records:
             all_records.extend(records)
