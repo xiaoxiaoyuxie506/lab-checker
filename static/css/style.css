@@ -1,0 +1,247 @@
+/* 实验室正常值范围检查系统 - 样式 */
+
+/* 全局样式 */
+body {
+    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+
+/* 导航栏 */
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+/* 上传区域 */
+.upload-area {
+    background-color: #f8f9fa;
+    border: 2px dashed #dee2e6 !important;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #0d6efd !important;
+    background-color: #e9ecef;
+}
+
+.upload-area.dragover {
+    border-color: #0d6efd !important;
+    background-color: #e7f1ff;
+}
+
+/* 统计卡片 */
+.stat-card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stat-card.error {
+    border-left: 4px solid #dc3545;
+}
+
+.stat-card.warning {
+    border-left: 4px solid #ffc107;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0;
+}
+
+/* 表格样式 */
+.table {
+    font-size: 0.875rem;
+}
+
+.table th {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* 状态徽章 */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.375em 0.75em;
+}
+
+/* 错误行 */
+.table-row-error {
+    background-color: #fff5f5 !important;
+}
+
+.table-row-error:hover {
+    background-color: #ffe0e0 !important;
+}
+
+/* 警告行 */
+.table-row-warning {
+    background-color: #fffbeb !important;
+}
+
+.table-row-warning:hover {
+    background-color: #fef3c7 !important;
+}
+
+/* 成功行 */
+.table-row-success {
+    background-color: #f0fdf4 !important;
+}
+
+.table-row-success:hover {
+    background-color: #dcfce7 !important;
+}
+
+/* 错误列表项 */
+.error-item {
+    padding: 1rem;
+    border-left: 4px solid transparent;
+}
+
+.error-item.error {
+    border-left-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.error-item.warning {
+    border-left-color: #ffc107;
+    background-color: #fffbeb;
+}
+
+.error-item .error-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.error-item .error-message {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0;
+}
+
+.error-item .error-meta {
+    font-size: 0.75rem;
+    color: #adb5bd;
+    margin-top: 0.5rem;
+}
+
+/* 按钮组 */
+.btn-group .btn {
+    font-size: 0.875rem;
+}
+
+/* 卡片 */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1.25rem;
+}
+
+/* 加载动画 */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .upload-area {
+        padding: 2rem !important;
+    }
+    
+    .stat-icon {
+        font-size: 1.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .table {
+        font-size: 0.75rem;
+    }
+    
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 提示框 */
+.tooltip-inner {
+    max-width: 300px;
+    text-align: left;
+}
+
+/* 空状态 */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
