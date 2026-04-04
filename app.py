@@ -19,11 +19,11 @@ from flask import Flask, render_template, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# 确保上传目录存在
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# Vercel Serverless 环境使用内存存储
+import tempfile
+UPLOAD_FOLDER = tempfile.gettempdir()
 
 # 允许的文件扩展名
 ALLOWED_EXTENSIONS = {'docx'}
@@ -733,7 +733,7 @@ def upload_file():
     filename = secure_filename(file.filename)
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     filename = f"{timestamp}_{filename}"
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
     file.save(filepath)
     
     # 分析文档
@@ -824,6 +824,6 @@ def export_docx():
 
 if __name__ == '__main__':
     # 确保上传目录存在
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     
     app.run(debug=True, host='0.0.0.0', port=5000)
